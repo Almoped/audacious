@@ -55,6 +55,7 @@ Tuple aud_drct_get_tuple();
 // returns some statistics of playing song
 // connect to the "info change" hook to be notified of changes
 void aud_drct_get_info(int & bitrate, int & samplerate, int & channels);
+void aud_drct_get_info(int & bitrate, int & samplerate, int & channels, float & gain);
 
 int aud_drct_get_time();
 int aud_drct_get_length();

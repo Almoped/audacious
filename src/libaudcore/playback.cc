@@ -678,6 +678,33 @@ EXPORT void aud_drct_get_info(int & bitrate, int & samplerate, int & channels)
     channels = ready ? pb_info.channels : 0;
 }
 
+EXPORT void aud_drct_get_info(int & bitrate, int & samplerate, int & channels, float & gain)
+{
+    auto mh = mutex.take();
+    bool ready = is_ready(mh);
+
+    bitrate = ready ? pb_info.bitrate : 0;
+    samplerate = ready ? pb_info.samplerate : 0;
+    channels = ready ? pb_info.channels : 0;
+
+    if (pb_info.gain_valid)
+    {    
+        auto mode = (ReplayGainMode)aud_get_int("replay_gain_mode");
+        if ((mode == ReplayGainMode::Album) ||
+            (mode == ReplayGainMode::Automatic &&
+            (!aud_get_bool("shuffle") || aud_get_bool("album_shuffle"))))
+        {
+            gain = pb_info.gain.album_gain;
+        }
+        else
+        {
+            gain = pb_info.gain.track_gain;
+        }
+    }
+    else
+        gain = 0;
+}
+
 // thread-safe
 EXPORT int aud_drct_get_time()
 {
